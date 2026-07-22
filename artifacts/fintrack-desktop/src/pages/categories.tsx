@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useCompany } from "@/context/CompanyContext";
-import { useListCategories, useDeleteCategory, getListCategoriesQueryKey } from "@workspace/api-client-react";
+import { useListCategories, useDeleteCategory, getListCategoriesQueryKey } from "../lib/api-client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
