@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useCompany } from "@/context/CompanyContext";
-import { useListCompanies, useCreateCompany } from "@workspace/api-client-react";
+import { useListCompanies, useCreateCompany } from "../../lib/api-client";
 import {
   Select,
   SelectContent,
@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { PlusCircle, Loader2 } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
-import { getListCompaniesQueryKey } from "@workspace/api-client-react";
+import { getListCompaniesQueryKey } from "../../lib/api-client";
 
 export function Header() {
   const { activeCompanyId, setActiveCompanyId } = useCompany();
