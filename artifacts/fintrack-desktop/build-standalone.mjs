@@ -9,8 +9,12 @@ import { fileURLToPath } from "url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = __dirname;
 
+// ── 0. Build the React frontend ──────────────────────────────────────────────
+console.log("1/4  Building React frontend with Vite...");
+execSync("npx vite build", { cwd: root, stdio: "inherit", shell: true });
+
 // ── 1. Bundle the Express server ────────────────────────────────────────────
-console.log("1/3  Bundling server with esbuild...");
+console.log("2/4  Bundling server with esbuild...");
 
 if (existsSync(path.join(root, "pkg-build"))) {
   rmSync(path.join(root, "pkg-build"), { recursive: true, force: true });
@@ -31,11 +35,11 @@ await build({
 });
 
 // ── 2. Copy the built React frontend next to the bundled server ──────────────
-console.log("2/3  Copying React frontend...");
+console.log("3/4  Copying React frontend...");
 cpSync(path.join(root, "dist"), path.join(root, "pkg-build", "dist"), { recursive: true });
 
 // ── 3. Package with pkg into a single exe ────────────────────────────────────
-console.log("3/3  Packaging with pkg...");
+console.log("4/4  Packaging with pkg...");
 mkdirSync(path.join(root, "release"), { recursive: true });
 
 // pkg reads assets from the "pkg" field in package.json.
