@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useCompany } from "@/context/CompanyContext";
-import { useListTransactions, useDeleteTransaction, getListTransactionsQueryKey, getListCategoriesQueryKey, useListCategories } from "@workspace/api-client-react";
+import { useListTransactions, useDeleteTransaction, getListTransactionsQueryKey, getListCategoriesQueryKey, useListCategories } from "../lib/api-client";
 import { useQueryClient } from "@tanstack/react-query";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
