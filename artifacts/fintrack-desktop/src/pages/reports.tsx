@@ -1,5 +1,5 @@
 import { useCompany } from "@/context/CompanyContext";
-import { useGetReportSummary, useGetReportByCategory, useGetMonthlyReport, getGetReportSummaryQueryKey, getGetReportByCategoryQueryKey, getGetMonthlyReportQueryKey } from "@workspace/api-client-react";
+import { useGetReportSummary, useGetReportByCategory, useGetMonthlyReport, getGetReportSummaryQueryKey, getGetReportByCategoryQueryKey, getGetMonthlyReportQueryKey } from "../lib/api-client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
