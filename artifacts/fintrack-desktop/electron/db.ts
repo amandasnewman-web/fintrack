@@ -1,16 +1,9 @@
-import Database from "better-sqlite3";
 import path from "path";
-import { app } from "electron";
-import { drizzle } from "drizzle-orm/better-sqlite3";
+import { drizzle } from "drizzle-orm/sql-js";
 import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
-
-function getDbPath(): string {
-  if (app.isPackaged) {
-    return path.join(app.getPath("userData"), "fintrack.db");
-  }
-  return path.join(__dirname, "../../fintrack-dev.db");
-}
+import fs from "fs";
+import type { Database as SqlJsDatabase } from "sql.js";
 
 export const companiesTable = sqliteTable("companies", {
   id: integer("id").primaryKey({ autoIncrement: true }),
@@ -82,15 +75,57 @@ export const receiptsTable = sqliteTable("receipts", {
   createdAt: text("created_at").notNull().default(sql`(datetime('now'))`),
 });
 
+function getDbPath(): string {
+  // Try Electron first
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const { app } = require("electron") as typeof import("electron");
+    if (app.isPackaged) {
+      return path.join(app.getPath("userData"), "fintrack.db");
+    }
+    return path.join(__dirname, "../../fintrack-dev.db");
+  } catch {
+    // Standalone (pkg) mode — use OS user data directory
+    const dataDir =
+      process.env.APPDATA
+        ? path.join(process.env.APPDATA, "FinTrack")
+        : path.join(require("os").homedir(), ".fintrack");
+    fs.mkdirSync(dataDir, { recursive: true });
+    return path.join(dataDir, "fintrack.db");
+  }
+}
+
 let _db: ReturnType<typeof drizzle> | null = null;
+let _sqliteDb: SqlJsDatabase | null = null;
+let _dbPath = "";
 
-export function getDb() {
+export function saveDb() {
+  if (!_sqliteDb || !_dbPath) return;
+  const data = _sqliteDb.export();
+  fs.writeFileSync(_dbPath, Buffer.from(data));
+}
+
+export async function initDb() {
   if (_db) return _db;
-  const sqlite = new Database(getDbPath());
-  sqlite.pragma("journal_mode = WAL");
-  sqlite.pragma("foreign_keys = ON");
 
-  sqlite.exec(`
+  // Use the browser variant — WASM is inlined as base64, no external file needed.
+  // Works in both Electron and pkg-packaged standalone executables.
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const initSqlJs = require("sql.js/dist/sql-wasm-browser.js") as (opts?: object) => Promise<{ Database: new (data?: ArrayLike<number> | Buffer) => SqlJsDatabase }>;
+  const SQL = await initSqlJs();
+
+  _dbPath = getDbPath();
+
+  let fileData: Buffer | undefined;
+  if (fs.existsSync(_dbPath)) {
+    fileData = fs.readFileSync(_dbPath);
+  }
+
+  _sqliteDb = fileData ? new SQL.Database(fileData) : new SQL.Database();
+
+  _sqliteDb.run("PRAGMA foreign_keys = ON;");
+
+  _sqliteDb.run(`
     CREATE TABLE IF NOT EXISTS companies (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
@@ -158,14 +193,16 @@ export function getDb() {
     );
   `);
 
-  _db = drizzle(sqlite, {
-    schema: {
-      companiesTable,
-      categoriesTable,
-      transactionsTable,
-      invoicesTable,
-      receiptsTable,
-    },
+  saveDb();
+
+  _db = drizzle(_sqliteDb, {
+    schema: { companiesTable, categoriesTable, transactionsTable, invoicesTable, receiptsTable },
   });
+
+  return _db;
+}
+
+export function getDb() {
+  if (!_db) throw new Error("Database not initialized — call initDb() first");
   return _db;
 }
