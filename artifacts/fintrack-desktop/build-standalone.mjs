@@ -1,5 +1,6 @@
 // Builds a single-file Windows exe.
-// Uses only CLI tools via npx — no native binary imports that can crash on startup.
+// The React frontend dist/ is pre-built and committed to the repo.
+// CI only needs to: bundle the server with esbuild, then package with pkg.
 import { execSync } from "child_process";
 import { cpSync, mkdirSync, rmSync, existsSync } from "fs";
 import path from "path";
@@ -12,10 +13,7 @@ function run(label, cmd) {
   execSync(cmd, { cwd: root, stdio: "inherit", shell: true });
 }
 
-// 1. Build React frontend
-run("Building React frontend…", "npx vite build");
-
-// 2. Bundle server + all deps into a single CJS file
+// 1. Bundle server + all deps into a single CJS file
 if (existsSync(path.join(root, "pkg-build"))) {
   rmSync(path.join(root, "pkg-build"), { recursive: true, force: true });
 }
@@ -35,11 +33,11 @@ run(
   ].join(" ")
 );
 
-// 3. Copy built frontend next to bundled server
+// 2. Copy pre-built frontend next to bundled server
 cpSync(path.join(root, "dist"), path.join(root, "pkg-build", "dist"), { recursive: true });
 console.log("▸ Copied dist/");
 
-// 4. Package everything into a single .exe
+// 3. Package everything into a single .exe
 mkdirSync(path.join(root, "release"), { recursive: true });
 run(
   "Packaging with @yao-pkg/pkg…",
