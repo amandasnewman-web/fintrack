@@ -17,10 +17,6 @@ jobs:
         working-directory: artifacts/fintrack-desktop
         run: npm install --ignore-scripts --legacy-peer-deps
 
-      - name: Setup esbuild
-        working-directory: artifacts/fintrack-desktop
-        run: node -e "try{require('esbuild')}catch(e){require('child_process').execSync('npm rebuild esbuild',{stdio:'inherit'})}"
-
       - name: Build standalone exe
         working-directory: artifacts/fintrack-desktop
         run: node build-standalone.mjs
