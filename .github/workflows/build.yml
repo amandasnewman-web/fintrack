@@ -17,13 +17,13 @@ jobs:
         working-directory: artifacts/fintrack-desktop
         run: npm install --legacy-peer-deps
 
-      - name: Build standalone exe
+      - name: Build installer
         working-directory: artifacts/fintrack-desktop
         run: node build-standalone.mjs
 
-      - name: Upload FinTrack.exe
+      - name: Upload FinTrack-Setup.exe
         uses: actions/upload-artifact@v4
         with:
           name: FinTrack-Windows
-          path: artifacts/fintrack-desktop/release/FinTrack.exe
+          path: artifacts/fintrack-desktop/release/FinTrack-Setup.exe
           retention-days: 30
