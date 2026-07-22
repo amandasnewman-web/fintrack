@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useCompany } from "@/context/CompanyContext";
-import { useGetCompany, useUpdateCompany, getGetCompanyQueryKey } from "@workspace/api-client-react";
+import { useGetCompany, useUpdateCompany, getGetCompanyQueryKey } from "../lib/api-client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
