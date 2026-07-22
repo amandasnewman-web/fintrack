@@ -1,5 +1,5 @@
 import { useCompany } from "@/context/CompanyContext";
-import { useGetReportSummary, useListTransactions, useGetReportByCategory, getGetReportSummaryQueryKey, getListTransactionsQueryKey, getGetReportByCategoryQueryKey } from "@workspace/api-client-react";
+import { useGetReportSummary, useListTransactions, useGetReportByCategory, getGetReportSummaryQueryKey, getListTransactionsQueryKey, getGetReportByCategoryQueryKey } from "../lib/api-client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
