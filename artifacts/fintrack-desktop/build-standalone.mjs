@@ -41,7 +41,7 @@ mkdirSync(path.join(root, "release"), { recursive: true });
 // pkg reads assets from the "pkg" field in package.json.
 // We pass the target explicitly so it works on the current OS (Windows on CI).
 execSync(
-  "npx @yao-pkg/pkg pkg-build/server.js --targets node18-win-x64 --output release/FinTrack.exe",
+  "npx --yes @yao-pkg/pkg pkg-build/server.js --targets node18-win-x64 --output release/FinTrack.exe",
   { cwd: root, stdio: "inherit", shell: true }
 );
 
