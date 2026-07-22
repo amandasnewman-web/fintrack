@@ -6,7 +6,7 @@ const router = Router({ mergeParams: true });
 
 router.get("/summary", (req, res) => {
   const db = getDb();
-  const companyId = parseInt(req.params.companyId);
+  const companyId = parseInt((req.params as Record<string, string>).companyId);
   if (isNaN(companyId)) { res.status(400).json({ error: "Invalid companyId" }); return; }
 
   const { startDate, endDate } = req.query as Record<string, string>;
@@ -55,7 +55,7 @@ router.get("/summary", (req, res) => {
 
 router.get("/by-category", (req, res) => {
   const db = getDb();
-  const companyId = parseInt(req.params.companyId);
+  const companyId = parseInt((req.params as Record<string, string>).companyId);
   if (isNaN(companyId)) { res.status(400).json({ error: "Invalid companyId" }); return; }
 
   const { startDate, endDate, type } = req.query as Record<string, string>;
@@ -107,7 +107,7 @@ router.get("/by-category", (req, res) => {
 
 router.get("/monthly", (req, res) => {
   const db = getDb();
-  const companyId = parseInt(req.params.companyId);
+  const companyId = parseInt((req.params as Record<string, string>).companyId);
   if (isNaN(companyId)) { res.status(400).json({ error: "Invalid companyId" }); return; }
 
   const { startDate, endDate } = req.query as Record<string, string>;
