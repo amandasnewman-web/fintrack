@@ -1,6 +1,6 @@
 import express from "express";
-import path from "path";
 import { createServer } from "http";
+import { initDb, saveDb } from "./db";
 import companiesRouter from "./routes/companies";
 import categoriesRouter from "./routes/categories";
 import transactionsRouter from "./routes/transactions";
@@ -9,6 +9,8 @@ import receiptsRouter from "./routes/receipts";
 import reportsRouter from "./routes/reports";
 
 export async function startApiServer(): Promise<number> {
+  await initDb();
+
   const app = express();
   app.use(express.json());
 
@@ -17,6 +19,16 @@ export async function startApiServer(): Promise<number> {
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type");
     if (req.method === "OPTIONS") { res.sendStatus(204); return; }
+    next();
+  });
+
+  app.use((req, res, next) => {
+    const isMutation = ["POST", "PATCH", "PUT", "DELETE"].includes(req.method);
+    if (isMutation) {
+      res.on("finish", () => {
+        if (res.statusCode < 400) saveDb();
+      });
+    }
     next();
   });
 
