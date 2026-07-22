@@ -1,34 +1,25 @@
-name: Build Windows Installer
+name: Build FinTrack
 
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "v*"
 
 jobs:
-  build-windows:
+  build:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-
+          node-version: "18"
       - name: Install dependencies
         working-directory: artifacts/fintrack-desktop
         run: npm install
-
-      - name: Build Windows installer
+      - name: Build standalone exe
         working-directory: artifacts/fintrack-desktop
-        run: npm run dist:win
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload installer artifact
+        run: node build-standalone.mjs
+      - name: Upload FinTrack.exe
         uses: actions/upload-artifact@v4
         with:
-          name: FinTrack-Windows-Installer
-          path: artifacts/fintrack-desktop/release/*.exe
+          name: FinTrack-Windows
+          path: artifacts/fintrack-desktop/release/FinTrack.exe
           retention-days: 30
