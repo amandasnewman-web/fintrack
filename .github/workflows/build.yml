@@ -8,15 +8,23 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: "18"
+
       - name: Install dependencies
         working-directory: artifacts/fintrack-desktop
-        run: npm install
+        run: npm install --ignore-scripts --legacy-peer-deps
+
+      - name: Setup esbuild
+        working-directory: artifacts/fintrack-desktop
+        run: node -e "try{require('esbuild')}catch(e){require('child_process').execSync('npm rebuild esbuild',{stdio:'inherit'})}"
+
       - name: Build standalone exe
         working-directory: artifacts/fintrack-desktop
         run: node build-standalone.mjs
+
       - name: Upload FinTrack.exe
         uses: actions/upload-artifact@v4
         with:
