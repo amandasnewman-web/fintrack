@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useCompany } from "@/context/CompanyContext";
-import { useCreateInvoice, useUpdateInvoice, getListInvoicesQueryKey } from "@workspace/api-client-react";
+import { useCreateInvoice, useUpdateInvoice, getListInvoicesQueryKey } from "../../lib/api-client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
