@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useCompany } from "@/context/CompanyContext";
-import { useListReceipts, useDeleteReceipt, getListReceiptsQueryKey } from "@workspace/api-client-react";
+import { useListReceipts, useDeleteReceipt, getListReceiptsQueryKey } from "../lib/api-client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
