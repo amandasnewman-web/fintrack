@@ -24,7 +24,7 @@ function serialize(c: typeof categoriesTable.$inferSelect) {
 
 router.get("/", (req, res) => {
   const db = getDb();
-  const companyId = parseInt(req.params.companyId);
+  const companyId = parseInt((req.params as Record<string, string>).companyId);
   if (isNaN(companyId)) { res.status(400).json({ error: "Invalid companyId" }); return; }
   const rows = db.select().from(categoriesTable).where(eq(categoriesTable.companyId, companyId)).orderBy(categoriesTable.name).all();
   res.json(rows.map(serialize));
@@ -32,7 +32,7 @@ router.get("/", (req, res) => {
 
 router.post("/", (req, res) => {
   const db = getDb();
-  const companyId = parseInt(req.params.companyId);
+  const companyId = parseInt((req.params as Record<string, string>).companyId);
   if (isNaN(companyId)) { res.status(400).json({ error: "Invalid companyId" }); return; }
   const parsed = categoryInputSchema.safeParse(req.body);
   if (!parsed.success) { res.status(400).json({ error: "Invalid input", details: parsed.error.issues }); return; }
@@ -42,7 +42,7 @@ router.post("/", (req, res) => {
 
 router.patch("/:id", (req, res) => {
   const db = getDb();
-  const companyId = parseInt(req.params.companyId);
+  const companyId = parseInt((req.params as Record<string, string>).companyId);
   const id = parseInt(req.params.id);
   if (isNaN(companyId) || isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
   const parsed = categoryInputSchema.partial().safeParse(req.body);
@@ -55,7 +55,7 @@ router.patch("/:id", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   const db = getDb();
-  const companyId = parseInt(req.params.companyId);
+  const companyId = parseInt((req.params as Record<string, string>).companyId);
   const id = parseInt(req.params.id);
   if (isNaN(companyId) || isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
   db.delete(categoriesTable).where(and(eq(categoriesTable.id, id), eq(categoriesTable.companyId, companyId))).run();
