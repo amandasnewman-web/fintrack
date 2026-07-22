@@ -4,6 +4,7 @@
   "description": "FinTrack - Multi-Company Finance Manager",
   "main": "dist-electron/main.js",
   "scripts": {
+    "postinstall": "electron-builder install-app-deps",
     "build:frontend": "vite build",
     "build:electron": "tsc -p tsconfig.electron.json",
     "build": "npm run build:frontend && npm run build:electron",
@@ -28,8 +29,7 @@
           "target": "nsis",
           "arch": ["x64"]
         }
-      ],
-      "icon": "assets/icon.ico"
+      ]
     },
     "nsis": {
       "oneClick": false,
