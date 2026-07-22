@@ -54,7 +54,7 @@ function serialize(row: typeof receiptsTable.$inferSelect & { categoryName?: str
 
 router.get("/", (req, res) => {
   const db = getDb();
-  const companyId = parseInt(req.params.companyId);
+  const companyId = parseInt((req.params as Record<string, string>).companyId);
   if (isNaN(companyId)) { res.status(400).json({ error: "Invalid companyId" }); return; }
 
   const { startDate, endDate } = req.query as Record<string, string>;
@@ -96,7 +96,7 @@ router.get("/", (req, res) => {
 
 router.post("/", (req, res) => {
   const db = getDb();
-  const companyId = parseInt(req.params.companyId);
+  const companyId = parseInt((req.params as Record<string, string>).companyId);
   if (isNaN(companyId)) { res.status(400).json({ error: "Invalid companyId" }); return; }
 
   const parsed = receiptInputSchema.safeParse(req.body);
@@ -128,7 +128,7 @@ router.post("/", (req, res) => {
 
 router.get("/:id", (req, res) => {
   const db = getDb();
-  const companyId = parseInt(req.params.companyId);
+  const companyId = parseInt((req.params as Record<string, string>).companyId);
   const id = parseInt(req.params.id);
   if (isNaN(companyId) || isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
 
@@ -163,7 +163,7 @@ router.get("/:id", (req, res) => {
 
 router.patch("/:id", (req, res) => {
   const db = getDb();
-  const companyId = parseInt(req.params.companyId);
+  const companyId = parseInt((req.params as Record<string, string>).companyId);
   const id = parseInt(req.params.id);
   if (isNaN(companyId) || isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
 
@@ -202,7 +202,7 @@ router.patch("/:id", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   const db = getDb();
-  const companyId = parseInt(req.params.companyId);
+  const companyId = parseInt((req.params as Record<string, string>).companyId);
   const id = parseInt(req.params.id);
   if (isNaN(companyId) || isNaN(id)) { res.status(400).json({ error: "Invalid id" }); return; }
   db.delete(receiptsTable).where(and(eq(receiptsTable.id, id), eq(receiptsTable.companyId, companyId))).run();
