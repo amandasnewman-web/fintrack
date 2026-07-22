@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useCompany } from "@/context/CompanyContext";
-import { useCreateCategory, useUpdateCategory, getListCategoriesQueryKey } from "@workspace/api-client-react";
+import { useCreateCategory, useUpdateCategory, getListCategoriesQueryKey } from "../../lib/api-client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
